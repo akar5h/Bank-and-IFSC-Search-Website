@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+
+  <head>
+    <!-- Required meta tags -->
+    <!-- Created by Akarsh Gajbhiye -->
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/css/bootstrap.min.css" integrity="sha384-rwoIResjU2yc3z8GV/NPeZWAv56rSmLldC3R/AZzGRnGxQQKnKkoFVhFQhNUwEyJ" crossorigin="anonymous">
+    <link rel="stylesheet" href="style.css" >
+  </head>
+  <body>
+
+      <nav class="navbar" style=" background-color: #4CAF50;border: none;color: white;">
+          <p class=" text-xl-center" > AvailFinance Internship  </p>
+        </nav>
+      
+  <div class="card text-center mx-5 my-5">
+      <div class="card-header bg-info">
+        IFSC Look-up.
+      </div>
+      <div class="card-body bg-light ">
+                
+      <form class="form-inline mx-4 my-4" action="" method="get">
+          Enter IFSC code:<br>
+          <input  class="ml-5" type="text" name="ifsc" required><br>
+          <input class="ml-3" type="submit" name="submit" id="butt" style=" background-color: #4CAF50;border: none;color: white;text-align: center; display: inline-block;">
+        </form>        
+      </div>
+    </div>
+
+  <?php
+    if ( isset( $_GET['submit'] ) ) {
+        $ifsc = $_GET['ifsc'];
+        echo $ifsc ; 
+
+        $ch = curl_init();
+
+        curl_setopt($ch, CURLOPT_URL, "https://ifsc.datayuge.com/api/v1/${ifsc}");
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'GET');
+
+        $headers = array();
+        $headers[] = 'Dy-X-Authorization: 082c42f21d38d8dfe508b5ded795ea8e0f3838ce';
+        curl_setopt($ch, CURLOPT_HTTPHEADER, $headers);
+
+        $result = curl_exec($ch);http://localhost/index.php?ifsc=MAHB0001821&submit=Submit
+        if (curl_errno($ch)) {
+            echo 'Error:' . curl_error($ch);
+        }
+        curl_close ($ch);
+
+        $decoded = json_decode($result);
+        if (isset($decoded->response->status) && $decoded->response->status == 'ERROR') {
+            die('error occured: ' . $decoded->response->errormessage);
+        }
+        $name = $decoded->bank ;
+        $if = $decoded->ifsc;
+        $br = $decoded->branch; 
+        $ad = $decoded->address;
+        $city = $decoded->city;
+        $state = $decoded->state;
+
+      
+      print " <div class=  \"card border-secondary bg-light mx-4 \" > " ;
+      print "<div class=\"card-header bg-primary text-center \"> <b>${name} </b> </div>" ;
+      print "<div class=\"card-body px-3\">" ;
+      print "<p class=\"card-text\">  <b>IFSC Code:</b> ${if}</p>"; 
+      print "<p class=\"card-text\"> <b>Branch:</b> ${br}</p>";  
+      print "<p class=\"card-text\"> <b>Address:</b>${ad}</p>"; 
+      print "<p class=\"card-text\"> <b>Contact No:</b>${con1}</p>"; 
+      print "<p class=\"card-text\"> <b>City:</b>${city}</p>"; 
+      print "<p class=\"card-text\">  <b>State :</b>${state}</p>"; 
+      print "</div>";
+      print "</div>";
+    }
+?>
+    
+
+  <div class="card text-center my-5 mx-5  ">
+      <div class="card-header bg-info">
+          Region Based Search
+      </div>
+      <div class="card-body">
+          <form class="form-inline mx-3 py-4  " action="" method="get">
+              Enter a City or a State  Name: 
+              <div class="form-check form-check-inline">
+                  <input class="form-check-input ml-3" type="radio" name="inlineRadioOptions" id="inlineRadio1" value="option1">
+                  <label class="form-check-label ml-2" for="inlineRadio1">City</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="radio" name="inlineRadioOptions" id="inlineRadio2" value="option2">
+                  <label class="form-check-label" for="inlineRadio2">State</label>
+                </div>
+                
+              <input class="ml-5" type="text" name="region" required><br>
+              <input class="ml-3" type="submit" name="submit1" style=" background-color: #4CAF50;border: none;color: white;text-align: center; display: inline-block;" >
+            </form>
+      </div>
+
+    </div>
+    <?php 
+    if ( isset( $_GET['submit1'] ) ) {
+      $c = $_GET['inlineRadioOptions'] ;
+      $city = $_GET['region'] ;
+      $city = strtoupper($city);
+      $file = fopen("ifsc.csv","r");
+      print "<div class=\"container\">";
+      print "<div class=\"card-columns\">";
+      
+        while(! feof($file))
+      {
+        $row = fgetcsv($file);
+        
+        if ($c == "option1" ){
+          $reg = $row[5];
+        }
+        elseif( $c == "option2"  ){
+          $reg = $row[7];
+        }       
+       
+        
+        $bk = $row[0];
+        $if = $row[1];
+        $br = $row[2];
+        $add1 = $row[3];
+        $con1 = $row[4];
+        $ci = $row[5];
+        $di = $row[6];
+        $st = $row[7];
+        
+        if ( $city == $reg){
+            print " <div class=  \"card border-secondary bg-light mx-4 \" > " ;
+            print "<div class=\"card-header bg-success text-center \"> <b>${bk} </b> </div>" ;
+            print "<div class=\"card-body px-3\">" ;
+            print "<p class=\"card-text\">  <b>IFSC Code:</b> ${if}</p>"; 
+            print "<p class=\"card-text\"> <b>Branch:</b> ${br}</p>";  
+            print "<p class=\"card-text\"> <b>Address:</b>${add1}</p>"; 
+            print "<p class=\"card-text\"> <b>Contact No:</b>${con1}</p>"; 
+            print "<p class=\"card-text\"> <b>City:</b>${ci}</p>"; 
+            print "<p class=\"card-text\"> <b>District:</b>${di}</p>"; 
+            print "<p class=\"card-text\">  <b>State :</b>${st}</p>"; 
+            print "</div>";
+            print "</div>";
+        } 
+        
+      }
+      fclose($file);
+      print "</div>";
+      print "</div>";
+
+    }
+    ?> 
+
+
+    <!-- jQuery first, then Tether, then Bootstrap JS. -->
+    <script src="https://code.jquery.com/jquery-3.1.1.slim.min.js" integrity="sha384-A7FZj7v+d/sdmMqp/nOQwliLvUsJfDHW+k9Omg/a/EheAdgtzNs3hpfag6Ed950n" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-alpha.6/js/bootstrap.min.js" integrity="sha384-vBWWzlZJ8ea9aCX4pEW3rVHjgjt7zpkNpZk+02D9phzyeVkE+jo0ieGizqPLForn" crossorigin="anonymous"></script>
+  </body>
+</html>

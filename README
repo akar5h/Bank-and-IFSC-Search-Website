@@ -1,0 +1,23 @@
+Avail finance:
+Made By  : Akarsh Gajbhiye
+Contact   : akarshgajbhiye@gmail.com . akarsh@iitk.ac.in, +91-9589198000
+
+You will find the solution for  Avail finance frontent develoment profile assessment test .
+The given website was hosted on a linux apache server and uses php , html and css .
+
+To run the webpage as intended , please install php7 and apache web server .
+and then copy current directory to the required  apache folder .
+
+For the IFSC lookup , I used api from https://ifsc.datayuge.com/ . 
+For the regional lookup form I used the dataset provided by Razorpay Api .
+Both of the functionaities are implimented by me on php language . 
+
+I have used html , css for the other parts . I have also used bootstrap for most parts to make the web page responsive and for styling (shorthands of Bootstrap are really helpful) .
+
+If you are using a linux system then for your ease, first install apache2 and php7 and then  just run script.sh (give permissions to script.sh first ) and then go to http://localhost/availF for preview otherwise host it on a LAMP/WAMP server. 
+
+Currently the region search functionaity can be used by first specifying/selecting the state/ city in consideration and then typing its name in the box , the press search . These can be extended to include District and  also search for banks considering multiple attributes together . 
+
+
+You can find more of my front end web dev work on github.com/akar5h
+
